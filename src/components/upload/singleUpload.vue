@@ -81,12 +81,12 @@ export default {
       return new Promise((resolve, reject) => {
         policy().then(response => {
           console.log('响应的数据', response);
-          _self.dataObj.policy = response.data.policy;
-          _self.dataObj.signature = response.data.signature;
-          _self.dataObj.ossaccessKeyId = response.data.accessid;
-          _self.dataObj.key = response.data.dir + getUUID() + '_${filename}';
-          _self.dataObj.dir = response.data.dir;
-          _self.dataObj.host = response.data.host;
+          _self.dataObj.policy = response.data.policy
+          _self.dataObj.signature = response.data.signature
+          _self.dataObj.ossaccessKeyId = response.data.accessid
+          _self.dataObj.key = response.data.dir + getUUID() + '_${filename}'
+          _self.dataObj.dir = response.data.dir
+          _self.dataObj.host = response.data.host
           console.log('响应的数据222。。。', _self.dataObj)
           resolve(true)
         }).catch(err => {
@@ -102,7 +102,7 @@ export default {
         name: file.name,
         url: this.dataObj.host + '/' + this.dataObj.key.replace('${filename}', file.name)
       });
-      this.emitInput(this.fileList[0].url);
+      this.emitInput(this.fileList[0].url)
     }
   }
 }

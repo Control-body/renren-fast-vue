@@ -1,73 +1,83 @@
-<!--  -->
 <template>
-      <el-tree :data="menus"
-               :props="defaultProps"
-               node-key="catId"
-               ref="menuTree"
-               @node-click="nodeClick"
-      ></el-tree>
+  <div>
+    <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+    <el-tree
+      :data="menus"  
+      :props="defaultProps"
+      node-key="catId"
+      ref="menuTree"
+      @node-click="nodeclick"
+      default-expand-all
+      :filter-node-method="filterNode"
+      :highlight-current = "true"
+    ></el-tree>
+  </div>
 </template>
 
 <script>
-// import
+//这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
+//例如：import 《组件名称》 from '《组件路径》';
+
 export default {
-  // 注册
+  //import引入的组件需要注入到对象中才能使用
   components: {},
-  // 定义变量
-  data () {
+  props: {},
+  data() {
+    //这里存放数据
     return {
+      filterText: "",
       menus: [],
       expandedKey: [],
       defaultProps: {
-        children: 'children',
-        label: 'name'
+        children: "children",
+        label: "name"
       }
-    }
+    };
   },
-  // 计算属性 当里面的数据发生变化时，会自动触发重新计算
+  //计算属性 类似于data概念
   computed: {},
-  // 监控data中的变量变化
-  watch: {},
-  // 方法集合
-  methods: {
-    getmenus () {
-      this.$http({
-        url: this.$http.adornUrl('/product/category/list/tree'),
-        method: 'get'
-      }).then(({data}) => {
-        this.menus = data.data
-        console.log('数据来咯！！！', data.data)
-      })
-    },
-    nodeClick (data, node, component) {
-      console.log('节点被点击', data, node, component)
-      this.$emit('tree-node-click', data, node, component)
+  //监控data中的数据变化
+  watch: {
+    filterText(val) {
+      this.$refs.menuTree.filter(val);
     }
   },
-  // --------------------------- 生命周期 start -----------------------------------
-  // 创建完成（可以访问当前this实例）
-  created () {
-    this.getmenus()
+  //方法集合
+  methods: {
+    //树节点过滤
+    filterNode(value, data) {
+      if (!value) return true;
+      return data.name.indexOf(value) !== -1;
+    },
+    getMenus() {
+      this.$http({
+        url: this.$http.adornUrl("/product/category/list/tree"),
+        method: "get"
+      }).then(({ data }) => {
+        this.menus = data.data;
+      });
+    },
+    nodeclick(data, node, component) {
+      console.log("子组件category的节点被点击", data, node, component);
+      //向父组件发送事件；
+      this.$emit("tree-node-click", data, node, component);
+    }
   },
-  // 挂载完成（可以访问DOM元素）
-  mounted () {},
-  // 创建之前
-  beforeCreate () {},
-  // 挂载之前
-  beforeMount () {},
-  // 更新之前
-  beforeUpdate () {},
-  // 更新之后
-  updated () {},
-  // 销毁之前
-  beforeDestroy () {},
-  // 销毁完成
-  destroyed () {},
-  // --------------------------- 生命周期 end -----------------------------------
-  // 如果页面有keep-alive缓存功能，这个函数会触发
-  activated () {}
-}
+  //生命周期 - 创建完成（可以访问当前this实例）
+  created() {
+    this.getMenus();
+  },
+  //生命周期 - 挂载完成（可以访问DOM元素）
+  mounted() {},
+  beforeCreate() {}, //生命周期 - 创建之前
+  beforeMount() {}, //生命周期 - 挂载之前
+  beforeUpdate() {}, //生命周期 - 更新之前
+  updated() {}, //生命周期 - 更新之后
+  beforeDestroy() {}, //生命周期 - 销毁之前
+  destroyed() {}, //生命周期 - 销毁完成
+  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+};
 </script>
-<style lang='scss' scoped>
-// @import url() 引入公共css类
+<style scoped>
+
 </style>
